@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <style>
+        body {
+            -webkit-print-color-adjust: exact !important;
+        }
+
+        .week {
+            width: 5px;
+            height: 5px;
+            margin: 2px;
+            border-radius: 1px;
+        }
+
+        .weeks-left {
+            border: 1px solid grey;
+        }
+
+        .weeks-lived {
+            border: 1px solid grey;
+            background-color: black;
+        }
+
+        .year {
+            display: flex;
+            flex-wrap: nowrap;
+            justify-content: center;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 0;
+        }
+
+        .text {
+            position: relative;
+            bottom: 7px;
+        }
+
+        figcaption {
+            text-align: right;
+            text-transform: uppercase;
+            font-family: sans-serif;
+            font-size: small;
+
+        }
+
+        blockquote {
+            margin: 10px 20px 0 20px;
+            text-align: center;
+            font-family: sans-serif;
+            font-size: small;
+        }
+
+        .footer {
+            bottom: 0;
+        }
+
+        @media print {
+            .print-hidden {
+                display: none;
+            }
+            .footer {
+                position: absolute;
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+            }
+        }
+    </style>
+    <!-- <label for="">
+        количество лет
+        <input type="number" id="let" value="18" min="4" max="59">
+    
+    </label> -->
+    <div class="print-hidden">
+        <label for="birthday">Ваша дата рождения</label>
+        <input type="date" name="" value='1981-08-18' id="birthday">
+
+        <button id='print'>Печать</button>
+    </div>
+    <div class="container">
+
+        <h1>MEMENTO MORI</h1>
+
+        <div id="content">
+        </div>
+        <!-- 
+        <figure>
+            <blockquote>
+                Remembering that I'll be dead soon is the most important tool I've ever encountered to help me make the big choices in life. Because almost everything -- all external expectations, all pride, all fear of embarrassment or failure -- these things just fall away in the face of death, leaving only what is truly important. Remembering that you are going to die is the best way I know to avoid the trap of thinking you have something to lose. You are already naked. There is no reason not to follow your heart.
+            Память о том, что я скоро умру — самый важный инструмент, который помогает мне принимать сложные решения в моей жизни.
+            Потому что всё остальное — чужое мнение, вся эта гордость, вся эта боязнь смущения или провала — все эти вещи падают пред лицом смерти,
+            оставляя лишь то, что действительно важно.  
+        </blockquote>
+        <figcaption>Steve Jobs</figcaption>
+    </figure> -->
+        <div class="footer">
+
+            <blockquote>
+                Жизнь дана нам достаточно долгая, и её с избытком хватит на свершение величайших дел, если распределить её с умом. Но если она не направляется доброю целью, если наша расточительность и небрежность позволяют ей утекать у нас меж пальцев, то когда пробьёт наш последний час, мы с удивлением обнаруживаем, что жизнь, течения которой мы не заметили, истекла
+            </blockquote>
+            <figcaption>синека</figcaption>
+        </div>
+    </div>
+
+
+    <script>
+
+        // const createWeeksLeft = () => {
+        //     const element = document.createElement('div');
+        //     element.classList.add('weeks-weft')
+        //     element.classList.add('week')
+        //     return element;
+        // }
+
+        const createYear = () => {
+            const element = document.createElement('div');
+            element.classList.add('year')
+            return element;
+        }
+
+        const createSpace = (cl, cl2) => {
+            const element = document.createElement('div');
+            element.classList.add('week')
+            if (cl) {
+                element.classList.add(cl)
+            }
+            if (cl2) {
+                element.classList.add(cl2)
+            }
+            return element;
+        }
+
+        const content = document.body.querySelector('#content')
+        const leta = document.body.querySelector('#let')
+
+        const years = 80;
+        const weeks = 52;
+
+
+        for (let index = 0; index < years; index++) {
+            const year = createYear()
+            if (!(index % 10)) {
+                console.log('lll')
+                const element = createSpace()
+                content.append(element)
+            }
+            for (let idx = 0; idx < weeks; idx++) {
+                if (!(idx % (weeks / 2))) {
+                    const element = createSpace()
+                    year.append(element)
+                }
+
+
+                const element = createSpace('weeks-left', 'col')
+                year.append(element)
+
+            }
+
+            if (!((index + 1) % 5)) {
+                const element = createSpace('text')
+                element.textContent = index + 1
+                year.append(createSpace())
+                year.append(element)
+            } else {
+                year.append(createSpace())
+                year.append(createSpace())
+            }
+            content.append(year)
+
+        }
+
+        const birthday = document.querySelector('#birthday')
+
+        const computed = () => {
+            const millisecondsPassed = +new Date() - +new Date(birthday.value)
+
+            const weeksLived = millisecondsPassed / (1000 * 60 * 60 * 24 * 7);
+            const w = document.querySelectorAll('.col')
+            w.forEach((item, idx) => {
+                if (idx >= weeksLived) {
+                    item.classList.remove('weeks-lived')
+                    item.classList.add('weeks-left')
+                } else {
+                    item.classList.remove('weeks-left')
+                    item.classList.add('weeks-lived')
+                }
+            });
+        }
+
+        birthday.onchange = (value) => {
+            computed()
+        }
+        computed()
+
+
+        const print = document.querySelector('#print');
+        print.onclick = () => {
+            window.print()
+        }
+        // leta.oninput = (e) => {
+        //     const count = e.target.value
+        //     for (let index = 0; index < 4160; index++) {
+        //         const element = document.createElement('div');
+        //         element.style.border = "1px solid green";
+        //         element.style.width = "6px";
+        //         element.style.height = "6px";
+
+        //         if (index < count) {
+        //             element.style.backgroundColor = "red";
+        //             element.style.borderColor = "red";
+
+        //         }
+
+        //         content.append(element)
+        //     }
+        // }
+
+        // console.log(leta.value);
+
+
+    </script>
+</body>
+
+</html>
